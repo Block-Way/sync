@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.34, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.37, for Linux (x86_64)
 --
--- Host: localhost    Database: osb
+-- Host: 127.0.0.1    Database: hah
 -- ------------------------------------------------------
--- Server version	5.7.34-0ubuntu0.18.04.1
+-- Server version	5.7.37-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,30 +16,32 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `block`
+-- Table structure for table `banners`
 --
 
-DROP TABLE IF EXISTS `block`;
+DROP TABLE IF EXISTS `banners`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `block` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hash` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `prev_hash` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `time` bigint(20) DEFAULT NULL,
-  `height` int(11) DEFAULT NULL,
-  `reward_address` varchar(64) CHARACTER SET utf8 DEFAULT NULL,
-  `reward_money` decimal(20,8) DEFAULT NULL,
-  `bits` decimal(30,2) DEFAULT NULL,
-  `is_useful` bit(1) DEFAULT b'1',
-  `type` varchar(64) DEFAULT NULL COMMENT '区块类型',
-  PRIMARY KEY (`id`),
-  KEY `hash` (`hash`) USING BTREE,
-  KEY `time` (`time`) USING BTREE,
-  KEY `height` (`height`) USING BTREE,
-  KEY `reward_address` (`reward_address`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6530 DEFAULT CHARSET=latin1;
+CREATE TABLE `banners` (
+  `id` int(10) NOT NULL,
+  `type` varchar(45) DEFAULT NULL,
+  `title` varchar(45) DEFAULT NULL,
+  `content` varchar(45) DEFAULT NULL,
+  `img` varchar(64) DEFAULT NULL,
+  `bgImg` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `banners`
+--
+
+LOCK TABLES `banners` WRITE;
+/*!40000 ALTER TABLE `banners` DISABLE KEYS */;
+INSERT INTO `banners` VALUES (1,'test','test img1','test img','http://via.placeholder.com/350x150','http://via.placeholder.com/350x150'),(2,'test','test img2','test img','http://via.placeholder.cn/350x150','http://via.placeholder.cn/350x150');
+/*!40000 ALTER TABLE `banners` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -50,4 +52,4 @@ CREATE TABLE `block` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-21 12:03:04
+-- Dump completed on 2022-03-21 14:55:14
