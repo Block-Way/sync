@@ -152,9 +152,11 @@ def rankstat():
         cursor.execute("DELETE FROM rank")
         cursor.execute(sql)
         ret = cursor.fetchall()
+        ranking = 1
         for row in ret:
             percent = row[1] / totalMined
-            sql = "INSERT INTO rank(address,balance,yield) VALUES('%s',%f,%f)" % (row[0], row[1],percent)
+            sql = "INSERT INTO rank(address,balance,yield,ranking) VALUES('%s',%f,%f,%d)" % (row[0], row[1],percent,ranking)
+            ranking = ranking + 1
             cursor.execute(sql)
         connection.commit()
 
