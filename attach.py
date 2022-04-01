@@ -9,6 +9,7 @@ from binascii import hexlify, unhexlify
 import config
 #import datetime
 from datetime import datetime
+import requests
 
 url = config.url
 connection = pymysql.connect(host=config.host, port=config.port, user=config.user, password=config.password, db=config.db)
@@ -159,11 +160,40 @@ def rankstat():
             ranking = ranking + 1
             cursor.execute(sql)
         connection.commit()
+    
+def listdelegate():
+    with connection.cursor() as cursor:
+        data = {
+            "id":1,
+            "method":"listdelegate",
+            "jsonrpc":"2.0",
+            "params":{}}
+        response = requests.post(url, json=data)
+        res = json.loads(response.text)
+        for obj in res["result"]:
+            sql = "SELECT id FROM pool where address = %s"
+            cursor.execute(sql,[obj["address"]])
+            ret = cursor.fetchone()
+            print(ret)
+            if ret == None:
+                sql = "insert into pool(address,`votes`,`name`)value(%s,%s,'dpos name')"
+                cursor.execute(sql,[obj["address"],obj["votes"]])
+            else:
+                sql = "update pool set `votes`= %s where address = %s"
+                cursor.execute(sql,[obj["votes"],obj["address"]])
+        connection.commit()
 
+def Task():
+    rankstat()
+    listdelegate()
+        
 if __name__ == '__main__':
+    listdelegate()
+    exit()
     while True:
         #blockcountstat()
         #votestatistic()
         rankstat()
+        listdelegate()
         print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"wait task 100s ...")
         time.sleep(100)

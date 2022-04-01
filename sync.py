@@ -7,6 +7,7 @@ import time
 from decimal import Decimal
 from binascii import hexlify, unhexlify
 import config
+import attach
 import utils
 
 url = config.url
@@ -291,6 +292,8 @@ if __name__ == '__main__':
             else:
                 print("getblockhash error:",obj)   
                 time.sleep(3)                    
+                attach.Task()
         else:
             print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"wait task 3s ...")
             time.sleep(3)
+            attach.Task()
