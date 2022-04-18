@@ -183,17 +183,32 @@ def listdelegate():
                 cursor.execute(sql,[obj["votes"],obj["address"]])
         connection.commit()
 
+blockInit = 0
+def blockstatisticsproc():
+    global blockInit  
+    with connection.cursor() as cursor:
+        sql = "call blockstatisticsproc()"
+        if blockInit == 0:             
+            sql ="call blockstatisticsproc31()"
+            blockInit = 1      
+        cursor.execute(sql)
+        print(blockInit, sql)
+        connection.commit()
+    
 def Task():
     rankstat()
     listdelegate()
-        
+    blockstatisticsproc()   
+
 if __name__ == '__main__':
-    listdelegate()
-    exit()
+    #blockstatisticsproc()
+
+    #exit()
     while True:
+        blockstatisticsproc()
         #blockcountstat()
         #votestatistic()
-        rankstat()
-        listdelegate()
+        #rankstat()
+        #listdelegate()
         print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),"wait task 100s ...")
-        time.sleep(100)
+        time.sleep(10)

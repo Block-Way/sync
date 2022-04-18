@@ -244,6 +244,18 @@ CREATE TABLE `tx` (
 --
 
 LOCK TABLES `tx` WRITE;
+
+DROP TABLE IF EXISTS `blockstatistics`;
+CREATE TABLE `blockstatistics` (
+  `reward_address` varchar(255) NOT NULL ,
+  `reward_date` varchar(255) not NULL,
+  `amount` int(11)  null
+) 
+
+
+
+
+
 /*!40000 ALTER TABLE `tx` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tx` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -258,3 +270,46 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2022-04-01 15:31:09
+
+
+
+drop procedure if exists `blockstatisticsproc`;
+
+CREATE DEFINER=`hah`@`%` PROCEDURE `blockstatisticsproc`()
+BEGIN
+DECLARE done INT DEFAULT 0; 
+declare startState int default 10;
+declare i int;
+declare blockCount int;
+declare reward_address1 varchar(255);
+declare reward_date1 varchar(255);
+declare amount1 int ;
+declare cur CURSOR for select reward_address,reward_date ,count(id) as amount   from(select * from  (
+select id , reward_address , FROM_UNIXTIME(time,'%Y-%m-%d') as reward_date  from block where type = 'primary-dpos') a where  datediff(now(), reward_date ) < 2)b
+group by   reward_address, reward_date order by reward_date ,reward_address;
+DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = 1; 
+set blockCount = 1;
+ OPEN cur;   
+ REPEAT 
+FETCH  cur INTO reward_address1, reward_date1, amount1; 
+select reward_address1,reward_date1,amount1;
+   if exists ( select *  from blockstatistics where reward_address=reward_address1 and reward_date=reward_date1) then 
+	 update blockstatistics set amount=amount1 where reward_address=reward_address1 and reward_date=reward_date1;
+   else
+	insert into blockstatistics( reward_address, reward_date,amount) values( reward_address1,reward_date1,amount1);    
+   end if;  
+UNTIL done END REPEAT; 
+CLOSE cur; 
+END
+
+
+
+
+drop procedure if exists `blockstatisticsproc31`;
+CREATE DEFINER=`hah`@`%` PROCEDURE `blockstatisticsproc31`()
+BEGIN
+delete from blockstatistics where datediff(now(), str_to_date(reward_date,'%Y-%m-%d')) < 31;
+  insert into blockstatistics(reward_address,reward_date,amount) select reward_address,reward_date ,count(id) as amount 
+ from(select * from(select id , reward_address , FROM_UNIXTIME(time,'%Y-%m-%d') as reward_date  from block where type = 'primary-dpos') a 
+ where  datediff(now(), reward_date ) < 31)b group by   reward_address, reward_date order by reward_date ,reward_address;
+END
