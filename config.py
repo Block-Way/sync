@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-#host="127.0.0.1"
-host="119.8.55.78"
+host="127.0.0.1"
+#host="119.8.55.78"
 port=3306
 user="hah"
 password="1234qwer"
