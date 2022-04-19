@@ -230,6 +230,7 @@ CREATE TABLE `tx` (
   `transtime` bigint(20) DEFAULT NULL COMMENT '交易时间',
   `data` varchar(4096) DEFAULT NULL COMMENT '交易备注',
   `height` int(11) DEFAULT NULL,
+  `nonce` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `block_hash` (`block_hash`) USING BTREE,
   KEY `txid` (`txid`) USING BTREE,

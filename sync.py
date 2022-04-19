@@ -89,8 +89,8 @@ def InsertTx(block_id,tx,cursor,height):
             data = 'certification'
         elif len(data) >= 4096:
             data = data[:4096]
-    sql = "insert tx(block_hash,txid,`from`,`to`,amount,fee,`type`,`data`,dpos_in,client_in,dpos_out,client_out,transtime,height)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    cursor.execute(sql,[block_id,tx["txid"], tx["from"],tx["to"],tx["amount"],tx["txfee"],tx["type"],data,dpos_in,client_in,dpos_out,client_out,tx["time"],height])
+    sql = "insert tx(block_hash,txid,`from`,`to`,amount,fee,`type`,`data`,dpos_in,client_in,dpos_out,client_out,transtime,height,nonce)values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    cursor.execute(sql,[block_id,tx["txid"], tx["from"],tx["to"],tx["amount"],tx["txfee"],tx["type"],data,dpos_in,client_in,dpos_out,client_out,tx["time"],height,tx['nonce']])
     
 def RollBACK(block_hash):
     with connection.cursor() as cursor:
